@@ -1,8 +1,13 @@
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 #include <vector>
 #include <string>
 #include "Timer.h"
+
+////////////////////////////////////////////////////////////////////////////////
+// KMP Algorithm & Associated Functions																				//
+////////////////////////////////////////////////////////////////////////////////
 
 // Longest proper prefix / suffix
 void makeLPS(std::string text, std::vector<int> & lps){
@@ -57,6 +62,49 @@ void KMP(std::string pattern,std::string text){
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// BM Algorithm & Associated Functions																				//
+////////////////////////////////////////////////////////////////////////////////
+
+void badCharRule(std::string str, int size, int badChar[256]){
+    for (int i = 0; i < 256; i++)
+        badChar[i] = -1;
+
+
+    for (int i = 0; i < size; i++)
+        badChar[(int) str[i]] = i;
+}
+
+void BM(std::string text, std::string pattern) {
+    int pattLength = pattern.size();
+    int textLength = text.size();
+
+    int badChar[256];
+
+    badCharRule(pattern, pattLength, badChar);
+
+    int shift = 0;
+    while(shift <= (textLength - pattLength))
+    {
+        int j = pattLength - 1;
+
+        while(j >= 0 && pattern[j] == text[shift + j])
+            j--;
+
+        if (j < 0)
+        {
+            std::cout << shift << " ";
+
+            shift += (shift + pattLength < textLength)? pattLength - badChar[text[shift + pattLength]] : 1;
+        } else
+            shift += std::max(1, j - badChar[text[shift + j]]);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Main & Driver Functions																										//
+////////////////////////////////////////////////////////////////////////////////
+
 void printMenu() {
 	std::cout << std::endl;
 	std::cout << "String Search II Project" << std::endl;
@@ -81,7 +129,7 @@ int main() {
 		if (input.compare("1") == 0) {
 			std::string text, pattern;
 
-			std::cout << "Knuth-Morris-Pratt Algorithm" << std::endl;
+			std::cout << "Test Knuth-Morris-Pratt Algorithm" << std::endl;
 			std::cout << "--------------------------------------------------" << std::endl;
 
 			std::cout << "Enter Input: ";
@@ -99,7 +147,7 @@ int main() {
 		else if (input.compare("2") == 0) {
 			std::string text, pattern;
 
-			std::cout << "Boyer-Moore Algorithm" << std::endl;
+			std::cout << "Test Boyer-Moore Algorithm" << std::endl;
 			std::cout << "--------------------------------------------------" << std::endl;
 
 			std::cout << "Enter Input: ";
@@ -115,18 +163,67 @@ int main() {
 		}
 
 		else if (input.compare("3") == 0) {
-			std::string text = "abbbbcbcbabcaaaaaabbbbcabcbbb", pattern = "abc";
-			Timer timer;
+			std::ofstream outFile ("KMP.csv");
 
-			timer.start();
-			KMP(pattern, text);
-			timer.stop();
+			std::cout << "Benchmark Knuth-Morris-Pratt Algorithm" << std::endl;
+			std::cout << "--------------------------------------------------" << std::endl;
 
-			std::cout << std::fixed << std::setprecision(6) << "Took " << timer.getDuration() << "s" << std::endl;
+			if (outFile.is_open()) {
+				std::string text[] = {"abcabc","abczzzzzzabcazzzzabczzz","zzabczzabcz","zzzabczzzabczz"},
+				pattern = "abc";
+				Timer timer;
+
+				for (int i = 0; i < 4; i++) {
+					std::cout << "Running case " << i << "; text = " << text[i] << "; ";
+
+					timer.start();
+					KMP(pattern, text[i]);
+					timer.stop();
+
+					outFile << std::fixed << std::setprecision(6) << (i+1) << "," << timer.getDuration() << std::endl;
+
+					std::cout << std::fixed << std::setprecision(6) << "; Took " << timer.getDuration() << "s" << std::endl;
+				}
+				
+				std::cout << "--------------------------------------------------" << std::endl;
+				std::cout << "Benchmarking complete; \"KMP.csv\" saved." << std::endl;
+			} else {
+				std::cout << "ERROR - Unable to access file." << std::endl;
+				std::cout << "--------------------------------------------------" << std::endl;
+				std::cout << "Benchmarking incomplete!" << std::endl;
+			}
 		}
 
 		else if (input.compare("4") == 0) {
-			
+			std::ofstream outFile ("BM.csv");
+
+			std::cout << "Benchmark Boyer-Moore Algorithm" << std::endl;
+			std::cout << "--------------------------------------------------" << std::endl;
+
+			if (outFile.is_open()) {
+				std::string text[] = {"abcabc","abczzzzzzabcazzzzabczzz","zzabczzabcz","zzzabczzzabczz"},
+				pattern = "abc";
+				Timer timer;
+
+				for (int i = 0; i < 4; i++) {
+					std::cout << "Running case " << i << "; text = " << text[i] << "; ";
+
+					timer.start();
+					BM(text[i], pattern);
+					timer.stop();
+
+					outFile << std::fixed << std::setprecision(6) << (i+1) << "," << timer.getDuration() << std::endl;
+
+					std::cout << std::fixed << std::setprecision(6) << "; Took " << timer.getDuration() << "s" << std::endl;
+				}
+				
+				std::cout << "--------------------------------------------------" << std::endl;
+				std::cout << "Benchmarking complete; \"BM.csv\" saved." << std::endl;
+			} else {
+				std::cout << "ERROR - Unable to access file." << std::endl;
+				std::cout << "--------------------------------------------------" << std::endl;
+				std::cout << "Benchmarking incomplete!" << std::endl;
+			}
 		}
 
 		else if (input.compare("5") == 0) {
