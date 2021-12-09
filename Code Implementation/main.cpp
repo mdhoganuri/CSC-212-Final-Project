@@ -158,7 +158,7 @@ int main() {
 			std::cout << "--------------------------------------------------" << std::endl;
 
 			std::cout << "The pattern " << pattern << " occurs at ";
-    	//KMP(pattern, text);
+    	BM(text, pattern);
 			std::cout << std::endl;
 		}
 
@@ -169,20 +169,20 @@ int main() {
 			std::cout << "--------------------------------------------------" << std::endl;
 
 			if (outFile.is_open()) {
-				std::string text[] = {"abcabc","abczzzzzzabcazzzzabczzz","zzabczzabcz","zzzabczzzabczz"},
+				std::string text[] = {"abcabcabcabcabcabc","abcabcabcabcabcabc","abcabcabcabcabcabcabc","abcabcabcabcabcabcabcabc","abcabcabcabcabcabcabcabcabc"},
 				pattern = "abc";
 				Timer timer;
 
 				for (int i = 0; i < 4; i++) {
-					std::cout << "Running case " << i << "; text = " << text[i] << "; ";
+					std::cout << "Running case " << (i+1) << "; text = " << text[i] << "; ";
 
 					timer.start();
 					KMP(pattern, text[i]);
 					timer.stop();
 
-					outFile << std::fixed << std::setprecision(6) << (i+1) << "," << timer.getDuration() << std::endl;
+					outFile << std::fixed << std::setprecision(3) << text[i] << "," << timer.getDuration() << std::endl;
 
-					std::cout << std::fixed << std::setprecision(6) << "; Took " << timer.getDuration() << "s" << std::endl;
+					std::cout << std::fixed << std::setprecision(3) << "; Took " << timer.getDuration() << "ms" << std::endl;
 				}
 				
 				std::cout << "--------------------------------------------------" << std::endl;
@@ -201,20 +201,20 @@ int main() {
 			std::cout << "--------------------------------------------------" << std::endl;
 
 			if (outFile.is_open()) {
-				std::string text[] = {"abcabc","abczzzzzzabcazzzzabczzz","zzabczzabcz","zzzabczzzabczz"},
+				std::string text[] = {"abcabcabcabcabcabc","abcabcabcabcabcabc","abcabcabcabcabcabcabc","abcabcabcabcabcabcabcabc","abcabcabcabcabcabcabcabcabc"},
 				pattern = "abc";
 				Timer timer;
 
 				for (int i = 0; i < 4; i++) {
-					std::cout << "Running case " << i << "; text = " << text[i] << "; ";
+					std::cout << "Running case " << (i+1) << "; text = " << text[i] << "; ";
 
 					timer.start();
 					BM(text[i], pattern);
 					timer.stop();
 
-					outFile << std::fixed << std::setprecision(6) << (i+1) << "," << timer.getDuration() << std::endl;
+					outFile << std::fixed << std::setprecision(3) << text[i] << "," << timer.getDuration() << std::endl;
 
-					std::cout << std::fixed << std::setprecision(6) << "; Took " << timer.getDuration() << "s" << std::endl;
+					std::cout << std::fixed << std::setprecision(3) << "; Took " << timer.getDuration() << "ms" << std::endl;
 				}
 				
 				std::cout << "--------------------------------------------------" << std::endl;

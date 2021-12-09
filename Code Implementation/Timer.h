@@ -31,6 +31,6 @@ void Timer::stop() {
 
 double Timer::getDuration() {
 	duration = duration_cast<microseconds>(end_point - start_point).count();
-	duration = duration / 1000000;
+	duration = duration / 1000;
 	return duration;
 }
