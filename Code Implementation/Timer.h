@@ -30,7 +30,7 @@ void Timer::stop() {
 }
 
 double Timer::getDuration() {
-	duration = duration_cast<microseconds>(end_point - start_point).count();
-	duration = duration / 1000;
+	duration = duration_cast<nanoseconds>(end_point - start_point).count();
+	//duration = duration / 1000;
 	return duration;
 }

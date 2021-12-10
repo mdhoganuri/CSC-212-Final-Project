@@ -1,4 +1,5 @@
 # CSC 212 Final Project (String Search II)
+
 Our group worked together to complete the **String Search II** project, which implements
 and benchmarks two algorithms used to identify the starting index of all occurances of a given pattern. For example, in the string ``"abcaaaaaaabcaaa"``, the pattern ``"abc"``
 would occur starting at index 0 and index 9. <br> <br>
@@ -12,3 +13,7 @@ would occur starting at index 0 and index 9. <br> <br>
 
 ## Example Execution
 ![Example execution](Images/runtime.png)
+
+### Contributors
+Mike Cavallaro <br>
+Matt Hogan
